@@ -19,7 +19,8 @@ def is_ubi_container_running():
 
 @cache
 def ubi_container_has_rpm(rpm):
-  return run_in_ubi_container(["dnf", "info", str(rpm)]) == 0
+  cmd = ["dnf", "info", str(rpm)]
+  return run_in_ubi_container(cmd).returncode == 0
 
 def start_ubi_container():
   ubi_cmd = ['podman', 'run', '--name=ubi', '--rm', '-d', '--security-opt=label=disable', '--entrypoint=bash', '-i', 'registry.access.redhat.com/ubi8/ubi', '-c', 'sleep infinity']
