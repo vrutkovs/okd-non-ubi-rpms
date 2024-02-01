@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 IGNORE_LIST=[
   # These are FCOS
-  'fedora-coreos', 'machine-os-content'
+  'fedora-coreos', 'machine-os-content',
   # Rebuilt using CentOS on CI
   'ironic', 'ironic-agent',
 ]
