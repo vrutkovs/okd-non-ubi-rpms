@@ -20,7 +20,7 @@ def run_in_ubi_container(cmds):
 
 def is_ubi_container_running():
   podman_cmd = ['podman', 'inspect', UBI_CONTAINER_NAME]
-  return subprocess.check_call(podman_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
+  return subprocess.run(podman_cmd, capture_output=False, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT).returncode == 0
 
 @cache
 def ubi_container_has_rpm(rpm):
@@ -28,7 +28,7 @@ def ubi_container_has_rpm(rpm):
   return run_in_ubi_container(cmd).returncode == 0
 
 def start_ubi_container():
-  ubi_cmd = ['podman', 'run', '--name=ubi', '--rm', '-d', '--security-opt=label=disable', '--entrypoint=bash', '-i', 'registry.access.redhat.com/ubi8/ubi', '-c', 'sleep infinity']
+  ubi_cmd = ['podman', 'run', '--name=ubi', '--rm', '-d', '--security-opt=label=disable', '--entrypoint=bash', '-i', 'registry.access.redhat.com/ubi9/ubi', '-c', 'sleep infinity']
   subprocess.check_output(ubi_cmd)
   run_in_ubi_container(['dnf', 'check-update'])
 
