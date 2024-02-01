@@ -10,7 +10,7 @@ IGNORE_LIST=[
   # These are FCOS
   'fedora-coreos', 'machine-os-content',
   # Rebuilt using CentOS on CI
-  'ironic', 'ironic-agent',
+  'ironic', 'ironic-agent', 'ironic-machine-os-downloader', 'ironic-static-ip-manager'
 ]
 UBI_CONTAINER_NAME='ubi'
 
