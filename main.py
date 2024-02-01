@@ -19,7 +19,7 @@ def is_ubi_container_running():
 
 @cache
 def ubi_container_has_rpm(rpm):
-  cmd = ["dnf", "info", str(rpm)]
+  cmd = ["dnf", "provides", str(rpm)]
   return run_in_ubi_container(cmd).returncode == 0
 
 def start_ubi_container():
