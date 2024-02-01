@@ -6,7 +6,12 @@ from functools import cache
 from pprint import pprint
 from tqdm import tqdm
 
-IGNORE_LIST=['fedora-coreos', 'machine-os-content']
+IGNORE_LIST=[
+  # These are FCOS
+  'fedora-coreos', 'machine-os-content'
+  # Rebuilt using CentOS on CI
+  'ironic', 'ironic-agent',
+]
 UBI_CONTAINER_NAME='ubi'
 
 if len(sys.argv) != 2:
