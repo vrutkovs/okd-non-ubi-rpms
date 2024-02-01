@@ -9,6 +9,11 @@ from tqdm import tqdm
 IGNORE_LIST=['fedora-coreos', 'machine-os-content']
 UBI_CONTAINER_NAME='ubi'
 
+if len(sys.argv) != 2:
+  raise ValueError('Please provide OKD release name.')
+
+release = sys.argv[1]
+
 def run_in_ubi_container(cmds):
   podman_cmd = ['podman', 'exec', '-ti', UBI_CONTAINER_NAME] + cmds
   return subprocess.run(podman_cmd, capture_output=False, encoding='utf-8', stdout=subprocess.DEVNULL)
@@ -40,14 +45,11 @@ def fetch_rpms_list_in_image(image):
   return rpms
 
 
-if len(sys.argv) != 2:
-  raise ValueError('Please provide OKD release name.')
 
 print(f'Starting UBI container and refreshing repos')
 if not is_ubi_container_running():
   start_ubi_container()
 
-release = sys.argv[1]
 print(f'Inspecting {release}')
 
 content_pull_specs_cmd = ['oc', 'adm', 'release', 'info', f'quay.io/openshift/okd:{release}','--pullspecs', '-o', 'json']
@@ -61,8 +63,6 @@ for image in content_pull_specs['references']['spec']['tags']:
 
 print(f'Found {len(content_images)} images')
 
-counter = 0
-
 all_rpms_in_image = dict()
 progress = tqdm(content_images.items())
 for image, pull_spec in progress:
@@ -71,9 +71,6 @@ for image, pull_spec in progress:
     print(f'Skipping {image}')
     continue
   all_rpms_in_image[image] = set(fetch_rpms_list_in_image(pull_spec))
-  counter += 1
-  if counter > 10:
-    break
 
 print('Finding rpms which are not installable from UBI container')
 not_found_in_ubi = dict()
